@@ -75,19 +75,11 @@ sub resolve {
 }
 
 sub resolve_node_keys {
-    my ($self, $cluster_or_node, $keys, $args) = @_;
+    my ($self, $cluster_or_node, $keys) = @_;
 
     my %node_keys;
     for my $key ( @$keys ) {
-        if ( is_hash_ref $args ) {
-            $args->{strategy} ||= 'Key';
-            $args->{key}        = $key;
-        }
-        else {
-            $args = $key;
-        }
-        
-        my $resolved = $self->resolve( $cluster_or_node, $args, +{get_node_name => 1} );
+        my $resolved = $self->resolve( $cluster_or_node, $key );
         $node_keys{$resolved->{node}} ||= [];
         push @{$node_keys{$resolved->{node}}}, $key;
     }
